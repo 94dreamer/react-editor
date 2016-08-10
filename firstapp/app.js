@@ -29,10 +29,10 @@ class Itemeditor extends React.Component{
     }
   }
   save(event){
-    this.props.save(this.props.id,event.target.previousSibling.value)
+    this.props.save(this.props.id,this.state.value)
   }
   remove(){
-    this.props.save(this.props.id)
+    this.props.remove(this.props.id)
   }
   change(event){
     //this.state.value=event.target.value;
