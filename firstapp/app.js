@@ -22,16 +22,29 @@ class Item extends React.Component{
   }
 }
 class Itemeditor extends React.Component{
+  constructor(props){
+    super(props);
+    this.state={
+      value:this.props.value
+    }
+  }
   save(event){
     this.props.save(this.props.id,event.target.previousSibling.value)
   }
   remove(){
     this.props.save(this.props.id)
   }
+  change(event){
+    //this.state.value=event.target.value;
+    //this.forceUpdate()//此两行可以合成一行
+    this.setState({
+      value:event.target.value
+    });
+  }
   render() {
     return(
       <li className="list-group-item" id={this.props.id}>
-        <input className="item-edit" type="text" defaultValue={this.props.value} />
+        <input className="item-edit" type="text" onChange={this.change.bind(this)} value={this.state.value} />
         <a className="glyphicon glyphicon-saved" onClick={this.save.bind(this)}></a>
         <a className="glyphicon glyphicon-remove" onClick={this.remove.bind(this)}></a>
       </li>
