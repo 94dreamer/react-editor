@@ -5,23 +5,35 @@
 import ReactDOM from  'react-dom';*///webpack 打包引入
 //import Editor from 'editor.jsx';//没有打包引入不了
 class Item extends React.Component{
+  edit(){
+    this.props.edit(this.props.id)
+  }
+  remove(){
+    this.props.remove(this.props.id)
+  }
   render() {
     return(
       <li className="list-group-item" id={this.props.id}>
         {this.props.value}
-        <a className="f_r glyphicon glyphicon-edit" onClick={this.props.edit}></a>
-        <a className="f_r glyphicon glyphicon-remove" onClick={this.props.remove}></a>
+        <a className="f_r glyphicon glyphicon-edit" onClick={this.edit.bind(this)}></a>
+        <a className="f_r glyphicon glyphicon-remove" onClick={this.remove.bind(this)}></a>
       </li>
     )
   }
 }
 class Itemeditor extends React.Component{
+  save(event){
+    this.props.save(this.props.id,event.target.previousSibling.value)
+  }
+  remove(){
+    this.props.save(this.props.id)
+  }
   render() {
     return(
       <li className="list-group-item" id={this.props.id}>
         <input className="item-edit" type="text" defaultValue={this.props.value} />
-        <a className="glyphicon glyphicon-saved" onClick={this.props.save}></a>
-        <a className="glyphicon glyphicon-remove" onClick={this.props.remove}></a>
+        <a className="glyphicon glyphicon-saved" onClick={this.save.bind(this)}></a>
+        <a className="glyphicon glyphicon-remove" onClick={this.remove.bind(this)}></a>
       </li>
     )
   }
@@ -48,31 +60,32 @@ class Editor extends React.Component {
     //this.setState({list: data.data});//改变状态
     this.forceUpdate();
   }
-  saveHandler(event){
-    console.log(event.target.previousSibling.value);
-    var id=event.target.parentNode.id*1;
+  saveHandler(id,value){
+    /*console.log(event.target.previousSibling.value);
+    var id=event.target.parentNode.id*1;*/
     this.state.editList.delete(id);
-    this.state.list.set(id,event.target.previousSibling.value);
+    //this.state.list.set(id,event.target.previousSibling.value);
+    this.state.list.set(id,value);
     this.forceUpdate();
   }
-  removeHandler(event){
-    var id=event.target.parentNode.id*1;//草草草草 取出来的id是数字
-    !this.state.editList.delete(id) && this.state.list.delete(id)
+  removeHandler(id){
+    //var id=event.target.parentNode.id*1;//草草草草 取出来的id是数字
+    !this.state.editList.delete(id) && this.state.list.delete(id);
     this.forceUpdate();
   }
-  editHandler(event){
-    var id=event.target.parentNode.id*1;
-    this.state.editList.set(id,this.state.list.get(id))
-    this.state.list.delete(id)
+  editHandler(id){
+    //var id=event.target.parentNode.id*1;
+    this.state.editList.set(id,this.state.list.get(id));
+    this.state.list.delete(id);
     this.forceUpdate();
   }
   render() {
     const ListDOM=[];
     const editListDOM=[];
-    for(let item of this.state.list.entries()){
+    for(let item of this.state.list.entries()){//两种遍历Map对象的方法，可加entries也可不加
       ListDOM.push(<Item key={item[0]} id={item[0]} value={item[1]} edit={this.editHandler.bind(this)} remove={this.removeHandler.bind(this)} />)
     }
-    for(let item of this.state.editList.entries()){
+    for(let item of this.state.editList){
       editListDOM.push(<Itemeditor key={item[0]} id={item[0]} value={item[1]} save={this.saveHandler.bind(this)} remove={this.removeHandler.bind(this)} />)
     }
     return (
