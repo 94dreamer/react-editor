@@ -20,7 +20,8 @@ class Item extends React.Component{
       </li>
     )
   }
-}
+}w
+
 class Itemeditor extends React.Component{
   constructor(props){
     super(props);
@@ -51,6 +52,7 @@ class Itemeditor extends React.Component{
     )
   }
 }
+
 class Editor extends React.Component {
   /*getInitialState(){//也就是说 通过es6类的继承实现时 state的初始化要在constructor中声明
     return{
