@@ -17,16 +17,12 @@ class Item extends React.Component {
     this.edit = this.edit.bind(this);
     this.remove = this.remove.bind(this);
   }
-
-  /*static defaultProps={
-
-  }*/
   /*static propTypes={//属性校验器，表示改属性必须是bool，否则报错
     value:React.PropTypes.string.isRequired
   }*/
-
-
   save() {
+    //console.log(this.getDOMNode());
+    //console.log(React.findDOMNode(this.refs.edtInput))
     this.setState({
       edit: false,
       value: this.refs.edtInput.value
@@ -45,6 +41,7 @@ class Item extends React.Component {
   }
 
   componentWillMount() {
+    //可以做一些不装载的判断
     console.log("1componentWillMount")
   }
 
@@ -53,22 +50,30 @@ class Item extends React.Component {
     console.log("2componentDidMount")
   }
 
+  componentWillReceiveProps(){
+    //可以乘机更改state而不会导致第二次更新渲染
+  }
+
   shouldComponentUpdate() {
+    //性能瓶颈时可以优化此方法来控制不必要的react渲染判断
     console.log("3shouldComponentUpdate");
     //需要返回一个布尔值
     return true;
   }
 
   componentWillUpdate() {
+    //组件将更新，可以做一些准备工作。
     console.log("4componentWillUpdate")
   }
 
   componentDidUpdate() {
+    //组件更新渲染完成，可以DOM操作。
     console.log("5componentDidUpdate")
   }
 
   componentWillUnmount() {
     //组件的未响应ajax中断一般在此调用
+    //组件调用的定时器和临时渲染的DOM也可以在这里清除
     //this.serverRequest.abort();
     console.log("6componentWillUnmount");
   }
@@ -89,7 +94,8 @@ class Item extends React.Component {
     )
   }
 }
-
+Item.propTypes = { value: React.PropTypes.number.isRequired};//属性校验器，表示改属性必须是bool，否则报错
+Item.defaultProps={value:0};
 class Editor extends React.Component {
   //React在ES6的实现中去掉了getInitialState这个hook函数，规定state在constructor中实现，如下：
   constructor(porps) {//也就是说 通过es6类的继承实现时 state的初始化要在constructor中声明
