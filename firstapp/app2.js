@@ -5,42 +5,73 @@
  import ReactDOM from  'react-dom';*///webpack 打包引入
 //import Editor from 'editor.jsx';//没有打包引入不了
 class Item extends React.Component {
+
   constructor(props) {
     super(props);
-    //属性校验器，表示改属性必须是bool，否则报错
-    //this.propTypes.value=React.PropTypes.string.isRequired;
+
     this.state = {
       edit: true,
       value: this.props.value
     };
-    this.save=this.save.bind(this);
-    this.edit=this.edit.bind(this);
-    this.remove=this.remove.bind(this);
-    this.change=this.change.bind(this)
+    this.save = this.save.bind(this);
+    this.edit = this.edit.bind(this);
+    this.remove = this.remove.bind(this);
   }
 
+  /*static defaultProps={
+
+  }*/
+  /*static propTypes={//属性校验器，表示改属性必须是bool，否则报错
+    value:React.PropTypes.string.isRequired
+  }*/
+
+
   save() {
-    this.state.edit=false;
-    this.forceUpdate();
+    this.setState({
+      edit: false,
+      value: this.refs.edtInput.value
+    })//和旧的state会合并，而不是重设//替换状态：replaceState
   }
 
   edit() {
-    this.state.edit=true;
-    this.forceUpdate();
+    /*this.state.edit=true;this.forceUpdate();*/
+    this.setState({
+      edit: true
+    })
   }
 
   remove() {
     this.props.remove(this.props.id)
   }
 
-  change(event) {
-    this.state.value=event.target.value;
-    this.forceUpdate();
+  componentWillMount() {
+    console.log("1componentWillMount")
   }
 
-  /*propTypes：{//ES5的写法
-    value:React.propTypes.string.isRequired
-  }*/
+  componentDidMount() {
+    //一般ajax装载数据放在这一步
+    console.log("2componentDidMount")
+  }
+
+  shouldComponentUpdate() {
+    console.log("3shouldComponentUpdate");
+    //需要返回一个布尔值
+    return true;
+  }
+
+  componentWillUpdate() {
+    console.log("4componentWillUpdate")
+  }
+
+  componentDidUpdate() {
+    console.log("5componentDidUpdate")
+  }
+
+  componentWillUnmount() {
+    //组件的未响应ajax中断一般在此调用
+    //this.serverRequest.abort();
+    console.log("6componentWillUnmount");
+  }
 
   render() {
     return (
@@ -51,7 +82,7 @@ class Item extends React.Component {
           <a className="f_r glyphicon glyphicon-remove" onClick={this.remove}></a>
         </li> :
         <li className="list-group-item" id={this.props.id}>
-          <input className="item-edit" type="text" onChange={this.change} value={this.state.value}/>
+          <input className="item-edit" type="text" ref="edtInput" defaultValue={this.state.value}/>
           <a className="glyphicon glyphicon-saved" onClick={this.save}></a>
           <a className="glyphicon glyphicon-remove" onClick={this.remove}></a>
         </li>
@@ -67,8 +98,8 @@ class Editor extends React.Component {
       key: 0,
       list: new Map(),
     };
-    this.addHandler=this.addHandler.bind(this)
-    this.removeHandler=this.removeHandler.bind(this)
+    this.addHandler = this.addHandler.bind(this)
+    this.removeHandler = this.removeHandler.bind(this)
   }
 
   addHandler(event) {
@@ -86,7 +117,7 @@ class Editor extends React.Component {
   render() {
     const ListDOM = [];
     for (let item of this.state.list.entries()) {//两种遍历Map对象的方法，可加entries也可不加
-      ListDOM.push(<Item key={item[0]} id={item[0]} value={item[1]} remove={this.removeHandler} />)
+      ListDOM.push(<Item key={item[0]} id={item[0]} value={item[1]} remove={this.removeHandler}/>)
     }
     return (
       <div>

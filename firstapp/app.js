@@ -20,7 +20,7 @@ class Item extends React.Component{
       </li>
     )
   }
-}w
+}
 
 class Itemeditor extends React.Component{
   constructor(props){
